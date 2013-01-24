@@ -1,0 +1,84 @@
+[Header]
+MagicCookie={0b13fe8c-dfe0-40eb-8900-6712719559a7}
+Version=1.0
+[File000]
+Location=D:\Microchip\Microchip Solutions\USB\Device - LibUSB - Generic Driver Demo\Firmware\Objects\FSUSB\main.o
+Folder=Intermediary
+DeviceName=PIC18F4550
+LanguageToolSuiteID={5B7D72DD-9861-47BD-9F60-2BE967BF8416}
+LanguageToolID={E56A1C86-9D32-4DF6-8C34-FE0388B1B644}
+LanguageToolLocation=D:\Microchip\mplabc18\bin\mcc18.exe
+PPAD=$(BINDIR)||$(TMPDIR)|.\Objects\FSUSB||$(AINDIR)||$(INCDIR)|C:\Program Files\Microchip\mplabc18\v3.38\h;..\..\..\Microchip\Include;.;C:\MCC18\h||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|main.c|usb_descriptors.c|..\..\..\Microchip\USB\usb_device.c|..\..\..\Microchip\USB\Generic Device Driver\usb_function_generic.c||<obj>||<lib>||<lkr>|rm18f4550 - HID Bootload.lkr||
+SuiteArgsString=
+ToolArgsString=-Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-
+TraceCmdString=
+DebugOptions=-D__DEBUG
+[File001]
+Location=D:\Microchip\Microchip Solutions\USB\Device - LibUSB - Generic Driver Demo\Firmware\Objects\FSUSB\usb_descriptors.o
+Folder=Intermediary
+DeviceName=PIC18F4550
+LanguageToolSuiteID={5B7D72DD-9861-47BD-9F60-2BE967BF8416}
+LanguageToolID={E56A1C86-9D32-4DF6-8C34-FE0388B1B644}
+LanguageToolLocation=D:\Microchip\mplabc18\bin\mcc18.exe
+PPAD=$(BINDIR)||$(TMPDIR)|.\Objects\FSUSB||$(AINDIR)||$(INCDIR)|C:\Program Files\Microchip\mplabc18\v3.38\h;..\..\..\Microchip\Include;.;C:\MCC18\h||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|main.c|usb_descriptors.c|..\..\..\Microchip\USB\usb_device.c|..\..\..\Microchip\USB\Generic Device Driver\usb_function_generic.c||<obj>||<lib>||<lkr>|rm18f4550 - HID Bootload.lkr||
+SuiteArgsString=
+ToolArgsString=-Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-
+TraceCmdString=
+DebugOptions=-D__DEBUG
+[File002]
+Location=D:\Microchip\Microchip Solutions\USB\Device - LibUSB - Generic Driver Demo\Firmware\Objects\FSUSB\usb_device.o
+Folder=Intermediary
+DeviceName=PIC18F4550
+LanguageToolSuiteID={5B7D72DD-9861-47BD-9F60-2BE967BF8416}
+LanguageToolID={E56A1C86-9D32-4DF6-8C34-FE0388B1B644}
+LanguageToolLocation=D:\Microchip\mplabc18\bin\mcc18.exe
+PPAD=$(BINDIR)||$(TMPDIR)|.\Objects\FSUSB||$(AINDIR)||$(INCDIR)|C:\Program Files\Microchip\mplabc18\v3.38\h;..\..\..\Microchip\Include;.;C:\MCC18\h||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|main.c|usb_descriptors.c|..\..\..\Microchip\USB\usb_device.c|..\..\..\Microchip\USB\Generic Device Driver\usb_function_generic.c||<obj>||<lib>||<lkr>|rm18f4550 - HID Bootload.lkr||
+SuiteArgsString=
+ToolArgsString=-Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-
+TraceCmdString=
+DebugOptions=-D__DEBUG
+[File003]
+Location=D:\Microchip\Microchip Solutions\USB\Device - LibUSB - Generic Driver Demo\Firmware\Objects\FSUSB\usb_function_generic.o
+Folder=Intermediary
+DeviceName=PIC18F4550
+LanguageToolSuiteID={5B7D72DD-9861-47BD-9F60-2BE967BF8416}
+LanguageToolID={E56A1C86-9D32-4DF6-8C34-FE0388B1B644}
+LanguageToolLocation=D:\Microchip\mplabc18\bin\mcc18.exe
+PPAD=$(BINDIR)||$(TMPDIR)|.\Objects\FSUSB||$(AINDIR)||$(INCDIR)|C:\Program Files\Microchip\mplabc18\v3.38\h;..\..\..\Microchip\Include;.;C:\MCC18\h||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|main.c|usb_descriptors.c|..\..\..\Microchip\USB\usb_device.c|..\..\..\Microchip\USB\Generic Device Driver\usb_function_generic.c||<obj>||<lib>||<lkr>|rm18f4550 - HID Bootload.lkr||
+SuiteArgsString=
+ToolArgsString=-Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-
+TraceCmdString=
+DebugOptions=-D__DEBUG
+[File004]
+Location=D:\Microchip\Microchip Solutions\USB\Device - LibUSB - Generic Driver Demo\Firmware\USB Device - Libusb - Generic Driver - C18 - PICDEM FSUSB.cof
+Folder=Output
+DeviceName=PIC18F4550
+LanguageToolSuiteID={5B7D72DD-9861-47BD-9F60-2BE967BF8416}
+LanguageToolID={96C98149-AA1B-4CF9-B967-FAE79CAB663C}
+LanguageToolLocation=D:\Microchip\mplabc18\bin\mplink.exe
+PPAD=$(BINDIR)||$(TMPDIR)|.\Objects\FSUSB||$(AINDIR)||$(INCDIR)|C:\Program Files\Microchip\mplabc18\v3.38\h;..\..\..\Microchip\Include;.;C:\MCC18\h||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|main.c|usb_descriptors.c|..\..\..\Microchip\USB\usb_device.c|..\..\..\Microchip\USB\Generic Device Driver\usb_function_generic.c||<obj>||<lib>||<lkr>|rm18f4550 - HID Bootload.lkr||
+SuiteArgsString=
+ToolArgsString=/w /o"$(BINDIR_)$(TARGETBASE).cof"
+TraceCmdString=
+DebugOptions=/z__MPLAB_DEBUG=1
+[File005]
+Location=D:\Microchip\Microchip Solutions\USB\Device - LibUSB - Generic Driver Demo\Firmware\USB Device - Libusb - Generic Driver - C18 - PICDEM FSUSB.hex
+Folder=Output
+DeviceName=PIC18F4550
+LanguageToolSuiteID={5B7D72DD-9861-47BD-9F60-2BE967BF8416}
+LanguageToolID={96C98149-AA1B-4CF9-B967-FAE79CAB663C}
+LanguageToolLocation=D:\Microchip\mplabc18\bin\mplink.exe
+PPAD=$(BINDIR)||$(TMPDIR)|.\Objects\FSUSB||$(AINDIR)||$(INCDIR)|C:\Program Files\Microchip\mplabc18\v3.38\h;..\..\..\Microchip\Include;.;C:\MCC18\h||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|main.c|usb_descriptors.c|..\..\..\Microchip\USB\usb_device.c|..\..\..\Microchip\USB\Generic Device Driver\usb_function_generic.c||<obj>||<lib>||<lkr>|rm18f4550 - HID Bootload.lkr||
+SuiteArgsString=
+ToolArgsString=/w /o"$(BINDIR_)$(TARGETBASE).cof"
+TraceCmdString=
+DebugOptions=/z__MPLAB_DEBUG=1
+[TOOL_LOC_STAMPS]
+tool_loc{96C98149-AA1B-4CF9-B967-FAE79CAB663C}=D:\Microchip\mplabc18\bin\mplink.exe
+tool_loc{E56A1C86-9D32-4DF6-8C34-FE0388B1B644}=D:\Microchip\mplabc18\bin\mcc18.exe
