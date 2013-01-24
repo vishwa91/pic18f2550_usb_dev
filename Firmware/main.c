@@ -45,7 +45,8 @@
 
 /** INCLUDES *******************************************************/
 #include "USB/usb.h"
-#include "HardwareProfile.h"
+//#include "HardwareProfile.h"
+#include "HardwareProfile - PICDEM FSUSB.h"
 #include "USB/usb_function_generic.h"
 
 /** CONFIGURATION **************************************************/
