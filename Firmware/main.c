@@ -12,7 +12,7 @@
  Software License Agreement:
 
  The software supplied herewith by Microchip Technology Incorporated
- (the "Company") for its PIC� Microcontroller is intended and
+ (the "Company") for its PIC Microcontroller is intended and
  supplied to you, the Company's customer, for use solely and
  exclusively on Microchip PIC Microcontroller products. The
  software is owned by the Company and/or its supplier, and is
@@ -93,215 +93,7 @@
 //      #pragma config EBTR2    = OFF
 //      #pragma config EBTR3    = OFF
         #pragma config EBTRB    = OFF
-
-#elif defined(PICDEM_FS_USB_K50)
-        #pragma config PLLSEL   = PLL3X     // 3X PLL multiplier selected
-        #pragma config CFGPLLEN = OFF       // PLL turned on during execution
-        #pragma config CPUDIV   = NOCLKDIV  // 1:1 mode (for 48MHz CPU)
-        #pragma config LS48MHZ  = SYS48X8   // Clock div / 8 in Low Speed USB mode
-        #pragma config FOSC     = INTOSCIO  // HFINTOSC selected at powerup, no clock out
-        #pragma config PCLKEN   = OFF       // Primary oscillator driver
-        #pragma config FCMEN    = OFF       // Fail safe clock monitor
-        #pragma config IESO     = OFF       // Internal/external switchover (two speed startup)
-        #pragma config nPWRTEN  = OFF       // Power up timer
-        #pragma config BOREN    = SBORDIS   // BOR enabled
-        #pragma config nLPBOR   = ON        // Low Power BOR
-        #pragma config WDTEN    = SWON      // Watchdog Timer controlled by SWDTEN
-        #pragma config WDTPS    = 32768     // WDT postscalar
-        #pragma config PBADEN   = OFF       // Port B Digital/Analog Powerup Behavior
-        #pragma config LVP      = OFF       // Low voltage programming
-        #pragma config MCLRE    = ON        // MCLR function enabled (RE3 disabled)
-        #pragma config STVREN   = ON        // Stack overflow reset
-        //#pragma config ICPRT  = OFF       // Dedicated ICPORT program/debug pins enable
-        #pragma config XINST    = OFF       // Extended instruction set
-
-#elif defined(PIC18F87J50_PIM)				// Configuration bits for PIC18F87J50 FS USB Plug-In Module board
-        #pragma config XINST    = OFF   	// Extended instruction set
-        #pragma config STVREN   = ON      	// Stack overflow reset
-        #pragma config PLLDIV   = 3         // (12 MHz crystal used on this board)
-        #pragma config WDTEN    = OFF      	// Watch Dog Timer (WDT)
-        #pragma config CP0      = OFF      	// Code protect
-        #pragma config CPUDIV   = OSC1      // OSC1 = divide by 1 mode
-        #pragma config IESO     = OFF      	// Internal External (clock) Switchover
-        #pragma config FCMEN    = OFF      	// Fail Safe Clock Monitor
-        #pragma config FOSC     = HSPLL     // Firmware must also set OSCTUNE<PLLEN> to start PLL!
-        #pragma config WDTPS    = 32768
-//      #pragma config WAIT     = OFF      	// Commented choices are
-//      #pragma config BW       = 16      	// only available on the
-//      #pragma config MODE     = MM      	// 80 pin devices in the 
-//      #pragma config EASHFT   = OFF      	// family.
-        #pragma config MSSPMSK  = MSK5
-//      #pragma config PMPMX    = DEFAULT
-//      #pragma config ECCPMX   = DEFAULT
-        #pragma config CCP2MX   = DEFAULT   
-        
-// Configuration bits for PIC18F97J94 PIM and PIC18F87J94 PIM
-#elif defined(PIC18F97J94_PIM) || defined(PIC18F87J94_PIM)
-        #pragma config STVREN   = ON      	// Stack overflow reset
-        #pragma config XINST    = OFF   	// Extended instruction set
-        #pragma config BOREN    = ON        // BOR Enabled
-        #pragma config BORV     = 0         // BOR Set to "2.0V" nominal setting
-        #pragma config CP0      = OFF      	// Code protect disabled
-        #pragma config FOSC     = FRCPLL    // Firmware should also enable active clock tuning for this setting
-        #pragma config SOSCSEL  = LOW       // SOSC circuit configured for crystal driver mode
-        #pragma config CLKOEN   = OFF       // Disable clock output on RA6
-        #pragma config IESO     = OFF      	// Internal External (clock) Switchover
-        #pragma config PLLDIV   = NODIV     // 4 MHz input (from 8MHz FRC / 2) provided to PLL circuit
-        #pragma config POSCMD   = NONE      // Primary osc disabled, using FRC
-        #pragma config FSCM     = CSECMD    // Clock switching enabled, fail safe clock monitor disabled
-        #pragma config WPDIS    = WPDIS     // Program memory not write protected
-        #pragma config WPCFG    = WPCFGDIS  // Config word page of program memory not write protected
-        #pragma config IOL1WAY  = OFF       // IOLOCK can be set/cleared as needed with unlock sequence
-        #pragma config LS48MHZ  = SYSX2     // Low Speed USB clock divider
-        #pragma config WDTCLK   = LPRC      // WDT always uses INTOSC/LPRC oscillator
-        #pragma config WDTEN    = ON        // WDT disabled; SWDTEN can control WDT
-        #pragma config WINDIS   = WDTSTD    // Normal non-window mode WDT.
-        #pragma config VBTBOR   = OFF       // VBAT BOR disabled
-      
-#elif defined(PIC18F46J50_PIM) || defined(PIC18F_STARTER_KIT_1) || defined(PIC18F47J53_PIM)
-     #pragma config WDTEN = OFF          //WDT disabled (enabled by SWDTEN bit)
-     #pragma config PLLDIV = 3           //Divide by 3 (12 MHz oscillator input)
-     #pragma config STVREN = ON          //stack overflow/underflow reset enabled
-     #pragma config XINST = OFF          //Extended instruction set disabled
-     #pragma config CPUDIV = OSC1        //No CPU system clock divide
-     #pragma config CP0 = OFF            //Program memory is not code-protected
-     #pragma config OSC = HSPLL          //HS oscillator, PLL enabled, HSPLL used by USB
-     #pragma config FCMEN = OFF          //Fail-Safe Clock Monitor disabled
-     #pragma config IESO = OFF           //Two-Speed Start-up disabled
-     #pragma config WDTPS = 32768        //1:32768
-     #pragma config DSWDTOSC = INTOSCREF //DSWDT uses INTOSC/INTRC as clock
-     #pragma config RTCOSC = T1OSCREF    //RTCC uses T1OSC/T1CKI as clock
-     #pragma config DSBOREN = OFF        //Zero-Power BOR disabled in Deep Sleep
-     #pragma config DSWDTEN = OFF        //Disabled
-     #pragma config DSWDTPS = 8192       //1:8,192 (8.5 seconds)
-     #pragma config IOL1WAY = OFF        //IOLOCK bit can be set and cleared
-     #pragma config MSSP7B_EN = MSK7     //7 Bit address masking
-     #pragma config WPFP = PAGE_1        //Write Protect Program Flash Page 0
-     #pragma config WPEND = PAGE_0       //Start protection at page 0
-     #pragma config WPCFG = OFF          //Write/Erase last page protect Disabled
-     #pragma config WPDIS = OFF          //WPFP[5:0], WPEND, and WPCFG bits ignored 
-     #if defined(PIC18F47J53_PIM)
-        #pragma config CFGPLLEN = OFF
-     #else
-        #pragma config T1DIG = ON           //Sec Osc clock source may be selected
-        #pragma config LPT1OSC = OFF        //high power Timer1 mode
-     #endif
-#elif defined(LOW_PIN_COUNT_USB_DEVELOPMENT_KIT)
-	// PIC18F14K50
-        #pragma config CPUDIV = NOCLKDIV
-        #pragma config USBDIV = OFF
-        #pragma config FOSC   = HS
-        #pragma config PLLEN  = ON
-        #pragma config FCMEN  = OFF
-        #pragma config IESO   = OFF
-        #pragma config PWRTEN = OFF
-        #pragma config BOREN  = OFF
-        #pragma config BORV   = 30
-        #pragma config WDTEN  = OFF
-        #pragma config WDTPS  = 32768
-        #pragma config MCLRE  = OFF
-        #pragma config HFOFST = OFF
-        #pragma config STVREN = ON
-        #pragma config LVP    = OFF
-        #pragma config XINST  = OFF
-        #pragma config BBSIZ  = OFF
-        #pragma config CP0    = OFF
-        #pragma config CP1    = OFF
-        #pragma config CPB    = OFF
-        #pragma config WRT0   = OFF
-        #pragma config WRT1   = OFF
-        #pragma config WRTB   = OFF
-        #pragma config WRTC   = OFF
-        #pragma config EBTR0  = OFF
-        #pragma config EBTR1  = OFF
-        #pragma config EBTRB  = OFF        
-
-#elif	defined(PIC16F1_LPC_USB_DEVELOPMENT_KIT)
-    // PIC 16F1459 fuse configuration:
-    // Config word 1 (Oscillator configuration)
-    // 20Mhz crystal input scaled to 48Mhz and configured for USB operation
-    #if defined (USE_INTERNAL_OSC)
-        __CONFIG(FOSC_INTOSC & WDTE_OFF & PWRTE_OFF & MCLRE_OFF & CP_OFF & BOREN_OFF & CLKOUTEN_ON & IESO_OFF & FCMEN_OFF);
-        __CONFIG(WRT_OFF & CPUDIV_NOCLKDIV & USBLSCLK_48MHz & PLLMULT_3x & PLLEN_ENABLED & STVREN_ON &  BORV_LO & LPBOR_OFF & LVP_OFF);
-    #else
-        __CONFIG(FOSC_HS & WDTE_OFF & PWRTE_OFF & MCLRE_OFF & CP_OFF & BOREN_OFF & CLKOUTEN_ON & IESO_OFF & FCMEN_OFF);
-        __CONFIG(WRT_OFF & CPUDIV_NOCLKDIV & USBLSCLK_48MHz & PLLMULT_4x & PLLEN_ENABLED & STVREN_ON &  BORV_LO & LPBOR_OFF & LVP_OFF);
-    #endif
-
-#elif defined(EXPLORER_16)
-    #if defined(__PIC24FJ256GB110__)
-        _CONFIG1( JTAGEN_OFF & GCP_OFF & GWRP_OFF & FWDTEN_OFF & ICS_PGx2) 
-        _CONFIG2( PLL_96MHZ_ON & IESO_OFF & FCKSM_CSDCMD & OSCIOFNC_ON & POSCMOD_HS & FNOSC_PRIPLL & PLLDIV_DIV2 & IOL1WAY_ON)
-    #elif defined(PIC24FJ256GB210_PIM)
-        _CONFIG1(FWDTEN_OFF & ICS_PGx2 & GWRP_OFF & GCP_OFF & JTAGEN_OFF)
-        _CONFIG2(POSCMOD_HS & IOL1WAY_ON & OSCIOFNC_ON & FCKSM_CSDCMD & FNOSC_PRIPLL & PLL96MHZ_ON & PLLDIV_DIV2 & IESO_OFF)
-    #elif defined(__PIC24FJ64GB004__)
-        _CONFIG1(WDTPS_PS1 & FWPSA_PR32 & WINDIS_OFF & FWDTEN_OFF & ICS_PGx1 & GWRP_OFF & GCP_OFF & JTAGEN_OFF)
-        _CONFIG2(POSCMOD_HS & I2C1SEL_PRI & IOL1WAY_OFF & OSCIOFNC_ON & FCKSM_CSDCMD & FNOSC_PRIPLL & PLL96MHZ_ON & PLLDIV_DIV2 & IESO_OFF)
-        _CONFIG3(WPFP_WPFP0 & SOSCSEL_SOSC & WUTSEL_LEG & WPDIS_WPDIS & WPCFG_WPCFGDIS & WPEND_WPENDMEM)
-        _CONFIG4(DSWDTPS_DSWDTPS3 & DSWDTOSC_LPRC & RTCOSC_SOSC & DSBOREN_OFF & DSWDTEN_OFF)
-    #elif defined(__32MX460F512L__) || defined(__32MX795F512L__)
-        #pragma config UPLLEN   = ON        // USB PLL Enabled
-        #pragma config FPLLMUL  = MUL_15        // PLL Multiplier
-        #pragma config UPLLIDIV = DIV_2         // USB PLL Input Divider
-        #pragma config FPLLIDIV = DIV_2         // PLL Input Divider
-        #pragma config FPLLODIV = DIV_1         // PLL Output Divider
-        #pragma config FPBDIV   = DIV_1         // Peripheral Clock divisor
-        #pragma config FWDTEN   = OFF           // Watchdog Timer
-        #pragma config WDTPS    = PS1           // Watchdog Timer Postscale
-        #pragma config FCKSM    = CSDCMD        // Clock Switching & Fail Safe Clock Monitor
-        #pragma config OSCIOFNC = OFF           // CLKO Enable
-        #pragma config POSCMOD  = HS            // Primary Oscillator
-        #pragma config IESO     = OFF           // Internal/External Switch-over
-        #pragma config FSOSCEN  = OFF           // Secondary Oscillator Enable (KLO was off)
-        #pragma config FNOSC    = PRIPLL        // Oscillator Selection
-        #pragma config CP       = OFF           // Code Protect
-        #pragma config BWP      = OFF           // Boot Flash Write Protect
-        #pragma config PWP      = OFF           // Program Flash Write Protect
-        #pragma config ICESEL   = ICS_PGx2      // ICE/ICD Comm Channel Select
-     #elif defined(__dsPIC33EP512MU810__)||defined(__PIC24EP512GU810__)
-        _FOSCSEL(FNOSC_FRC);
-        _FOSC(FCKSM_CSECMD & OSCIOFNC_OFF & POSCMD_XT);
-        _FWDT(FWDTEN_OFF);
-    #else
-        #error No hardware board defined, see "HardwareProfile.h" and __FILE__
-    #endif
-#elif defined(PIC24F_STARTER_KIT)
-    _CONFIG1( JTAGEN_OFF & GCP_OFF & GWRP_OFF & FWDTEN_OFF & ICS_PGx2) 
-    _CONFIG2( PLL_96MHZ_ON & IESO_OFF & FCKSM_CSDCMD & OSCIOFNC_ON & POSCMOD_HS & FNOSC_PRIPLL & PLLDIV_DIV3 & IOL1WAY_ON)
-#elif defined(PIC24FJ256DA210_DEV_BOARD)
-    _CONFIG1(FWDTEN_OFF & ICS_PGx2 & GWRP_OFF & GCP_OFF & JTAGEN_OFF)
-    _CONFIG2(POSCMOD_HS & IOL1WAY_ON & OSCIOFNC_ON & FCKSM_CSDCMD & FNOSC_PRIPLL & PLL96MHZ_ON & PLLDIV_DIV2 & IESO_OFF)
-#elif defined(PIC32_USB_STARTER_KIT)
-    #pragma config UPLLEN   = ON        // USB PLL Enabled
-    #pragma config FPLLMUL  = MUL_15        // PLL Multiplier
-    #pragma config UPLLIDIV = DIV_2         // USB PLL Input Divider
-    #pragma config FPLLIDIV = DIV_2         // PLL Input Divider
-    #pragma config FPLLODIV = DIV_1         // PLL Output Divider
-    #pragma config FPBDIV   = DIV_1         // Peripheral Clock divisor
-    #pragma config FWDTEN   = OFF           // Watchdog Timer
-    #pragma config WDTPS    = PS1           // Watchdog Timer Postscale
-    #pragma config FCKSM    = CSDCMD        // Clock Switching & Fail Safe Clock Monitor
-    #pragma config OSCIOFNC = OFF           // CLKO Enable
-    #pragma config POSCMOD  = HS            // Primary Oscillator
-    #pragma config IESO     = OFF           // Internal/External Switch-over
-    #pragma config FSOSCEN  = OFF           // Secondary Oscillator Enable (KLO was off)
-    #pragma config FNOSC    = PRIPLL        // Oscillator Selection
-    #pragma config CP       = OFF           // Code Protect
-    #pragma config BWP      = OFF           // Boot Flash Write Protect
-    #pragma config PWP      = OFF           // Program Flash Write Protect
-    #pragma config ICESEL   = ICS_PGx2      // ICE/ICD Comm Channel Select
-#elif defined(PIC24FJ64GB502_MICROSTICK)
-    _CONFIG1(WDTPS_PS1 & FWPSA_PR32 & WINDIS_OFF & FWDTEN_OFF & ICS_PGx1 & GWRP_OFF & GCP_OFF & JTAGEN_OFF)
-    _CONFIG2(I2C1SEL_PRI & IOL1WAY_OFF & FCKSM_CSDCMD & FNOSC_PRIPLL & PLL96MHZ_ON & PLLDIV_DIV2 & IESO_OFF)
-    _CONFIG3(WPFP_WPFP0 & SOSCSEL_SOSC & WUTSEL_LEG & WPDIS_WPDIS & WPCFG_WPCFGDIS & WPEND_WPENDMEM)
-    _CONFIG4(DSWDTPS_DSWDTPS3 & DSWDTOSC_LPRC & RTCOSC_SOSC & DSBOREN_OFF & DSWDTEN_OFF)
-#else
-    #error No hardware board defined, see "HardwareProfile.h"
 #endif
-
-
-
 /** VARIABLES ******************************************************/
 #if defined(__18CXX)
     //The OUTPacket[] and INPacket[] arrays are used as
@@ -354,6 +146,7 @@
     #define IN_DATA_BUFFER_ADDRESS_TAG
     #define OUT_DATA_BUFFER_ADDRESS_TAG
 #endif
+
 
 unsigned char INPacket[USBGEN_EP_SIZE] IN_DATA_BUFFER_ADDRESS_TAG;		//User application buffer for sending IN packets to the host
 unsigned char OUTPacket[USBGEN_EP_SIZE] OUT_DATA_BUFFER_ADDRESS_TAG;	//User application buffer for receiving and holding OUT packets sent from the host
