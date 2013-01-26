@@ -1,0 +1,11 @@
+# Ignore object files
+*.o
+
+# Ignore python compiled files
+*.pyc
+
+# Ignore mplab files
+*.cof
+*.mcp
+*.mcs
+
