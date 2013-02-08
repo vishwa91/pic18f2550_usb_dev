@@ -1,53 +1,22 @@
-﻿/********************************************************************
+/********************************************************************
  FileName:      main.c
  Dependencies:  See INCLUDES section
- Processor:     PIC18, PIC24, dsPIC, and PIC32 USB Microcontrollers
- Hardware:      This demo is natively intended to be used on Microchip USB demo
-                boards supported by the MCHPFSUSB stack.  See release notes for
-                support matrix.  This demo can be modified for use on other hardware
-                platforms.
- Complier:      Microchip C18 (for PIC18), XC16 (for PIC24/dsPIC), XC32 (for PIC32)
+ Processor:     PIC18F2550
+ Hardware:      This firmware is based on custom USB device based on
+				PIC18F2550. The schematics can be found in the 
+				hardware folder.
+ Complier:      Microchip C18 (for PIC18)
  Company:       Microchip Technology, Inc.
 
  Software License Agreement:
-
- The software supplied herewith by Microchip Technology Incorporated
- (the "Company") for its PIC Microcontroller is intended and
- supplied to you, the Company's customer, for use solely and
- exclusively on Microchip PIC Microcontroller products. The
- software is owned by the Company and/or its supplier, and is
- protected under applicable copyright laws. All rights are reserved.
- Any use in violation of the foregoing restrictions may subject the
- user to criminal sanctions under applicable laws, as well as to
- civil liability for the breach of the terms and conditions of this
- license.
-
- THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
- WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
- TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
- PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
- IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
- CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-
+ // Yet to insert a license agreement.
 ********************************************************************
- File Description:
-
- Change History:
-  Rev   Description
-  ----  -----------------------------------------
-  2.6a  Added support for the PIC24FJ256GB210
-
-  2.7   No change
-
-  2.7b  Improvements to USBCBSendResume(), to make it easier to use.
-  2.9f  Adding new part support
-********************************************************************/
 
 /** INCLUDES *******************************************************/
 #include "USB/usb.h"
-//#include "HardwareProfile.h"
 #include "HardwareProfile - PICDEM FSUSB.h"
 #include "USB/usb_function_generic.h"
+//#include "application.c"
 
 /** CONFIGURATION **************************************************/
 #if defined(PICDEM_FS_USB)      // Configuration bits for PICDEM FS USB Demo Board (based on PIC18F4550)
@@ -113,40 +82,8 @@
     #endif
 #endif
 
-
-#if defined(__XC8)
-    #if defined(_18F14K50) || defined(_18F13K50) || defined(_18LF14K50) || defined(_18LF13K50)
-        #define IN_DATA_BUFFER_ADDRESS 0x260
-        #define OUT_DATA_BUFFER_ADDRESS (IN_DATA_BUFFER_ADDRESS + USBGEN_EP_SIZE)
-        #define IN_DATA_BUFFER_ADDRESS_TAG @IN_DATA_BUFFER_ADDRESS
-        #define OUT_DATA_BUFFER_ADDRESS_TAG @OUT_DATA_BUFFER_ADDRESS
-    #elif  defined(_18F2455)   || defined(_18F2550)   || defined(_18F4455)  || defined(_18F4550)\
-        || defined(_18F2458)   || defined(_18F2453)   || defined(_18F4558)  || defined(_18F4553)\
-        || defined(_18LF24K50) || defined(_18F24K50)  || defined(_18LF25K50)\
-        || defined(_18F25K50)  || defined(_18LF45K50) || defined(_18F45K50)
-        #define IN_DATA_BUFFER_ADDRESS 0x500
-        #define OUT_DATA_BUFFER_ADDRESS (IN_DATA_BUFFER_ADDRESS + USBGEN_EP_SIZE)
-        #define IN_DATA_BUFFER_ADDRESS_TAG @IN_DATA_BUFFER_ADDRESS
-        #define OUT_DATA_BUFFER_ADDRESS_TAG @OUT_DATA_BUFFER_ADDRESS
-    #elif defined(_18F4450) || defined(_18F2450)
-        #define IN_DATA_BUFFER_ADDRESS 0x480
-        #define OUT_DATA_BUFFER_ADDRESS (IN_DATA_BUFFER_ADDRESS + USBGEN_EP_SIZE)
-        #define IN_DATA_BUFFER_ADDRESS_TAG @IN_DATA_BUFFER_ADDRESS
-        #define OUT_DATA_BUFFER_ADDRESS_TAG @OUT_DATA_BUFFER_ADDRESS
-    #elif defined(_16F1459)
-        #define IN_DATA_BUFFER_ADDRESS 0x2140
-        #define OUT_DATA_BUFFER_ADDRESS 0x2190
-        #define IN_DATA_BUFFER_ADDRESS_TAG @IN_DATA_BUFFER_ADDRESS
-        #define OUT_DATA_BUFFER_ADDRESS_TAG @OUT_DATA_BUFFER_ADDRESS
-    #else
-        #define IN_DATA_BUFFER_ADDRESS_TAG
-        #define OUT_DATA_BUFFER_ADDRESS_TAG
-    #endif
-#else
-    #define IN_DATA_BUFFER_ADDRESS_TAG
-    #define OUT_DATA_BUFFER_ADDRESS_TAG
-#endif
-
+#define IN_DATA_BUFFER_ADDRESS_TAG
+#define OUT_DATA_BUFFER_ADDRESS_TAG
 
 unsigned char INPacket[USBGEN_EP_SIZE] IN_DATA_BUFFER_ADDRESS_TAG;		//User application buffer for sending IN packets to the host
 unsigned char OUTPacket[USBGEN_EP_SIZE] OUT_DATA_BUFFER_ADDRESS_TAG;	//User application buffer for receiving and holding OUT packets sent from the host
@@ -173,19 +110,7 @@ void BlinkUSBStatus(void);
 
 /** VECTOR REMAPPING ***********************************************/
 #if defined(__18CXX)
-	//On PIC18 devices, addresses 0x00, 0x08, and 0x18 are used for
-	//the reset, high priority interrupt, and low priority interrupt
-	//vectors.  However, the current Microchip USB bootloader 
-	//examples are intended to occupy addresses 0x00-0x7FF or
-	//0x00-0xFFF depending on which bootloader is used.  Therefore,
-	//the bootloader code remaps these vectors to new locations
-	//as indicated below.  This remapping is only necessary if you
-	//wish to program the hex file generated from this project with
-	//the USB bootloader.  If no bootloader is used, edit the
-	//usb_config.h file and comment out the following defines:
-	//#define PROGRAMMABLE_WITH_USB_HID_BOOTLOADER
-	//#define PROGRAMMABLE_WITH_USB_LEGACY_CUSTOM_CLASS_BOOTLOADER
-	
+	// Make sure the code does not overwrite the bootloader space.	
 	#if defined(PROGRAMMABLE_WITH_USB_HID_BOOTLOADER)
 		#define REMAPPED_RESET_VECTOR_ADDRESS			0x1100
 		#define REMAPPED_HIGH_INTERRUPT_VECTOR_ADDRESS	0x1108
@@ -220,23 +145,7 @@ void BlinkUSBStatus(void);
 	}
 	
 	#if defined(PROGRAMMABLE_WITH_USB_HID_BOOTLOADER)||defined(PROGRAMMABLE_WITH_USB_MCHPUSB_BOOTLOADER)
-	//Note: If this project is built while one of the bootloaders has
-	//been defined, but then the output hex file is not programmed with
-	//the bootloader, addresses 0x08 and 0x18 would end up programmed with 0xFFFF.
-	//As a result, if an actual interrupt was enabled and occured, the PC would jump
-	//to 0x08 (or 0x18) and would begin executing "0xFFFF" (unprogrammed space).  This
-	//executes as nop instructions, but the PC would eventually reach the REMAPPED_RESET_VECTOR_ADDRESS
-	//(0x1000 or 0x800, depending upon bootloader), and would execute the "goto _startup".  This
-	//would effective reset the application.
-	
-	//To fix this situation, we should always deliberately place a 
-	//"goto REMAPPED_HIGH_INTERRUPT_VECTOR_ADDRESS" at address 0x08, and a
-	//"goto REMAPPED_LOW_INTERRUPT_VECTOR_ADDRESS" at address 0x18.  When the output
-	//hex file of this project is programmed with the bootloader, these sections do not
-	//get bootloaded (as they overlap the bootloader space).  If the output hex file is not
-	//programmed using the bootloader, then the below goto instructions do get programmed,
-	//and the hex file still works like normal.  The below section is only required to fix this
-	//scenario.
+	// The following lines are corrections in case the program is not written with a bootloader.
 	#pragma code HIGH_INTERRUPT_VECTOR = 0x08
 	void High_ISR (void)
 	{
@@ -275,45 +184,7 @@ void BlinkUSBStatus(void);
 	
 	}	//This return will be a "retfie", since this is in a #pragma interruptlow section 
 
-#elif defined(__C30__) || defined __XC16__
-    #if defined(PROGRAMMABLE_WITH_USB_HID_BOOTLOADER)
-        /*
-         *	ISR JUMP TABLE
-         *
-         *	It is necessary to define jump table as a function because C30 will
-         *	not store 24-bit wide values in program memory as variables.
-         *
-         *	This function should be stored at an address where the goto instructions 
-         *	line up with the remapped vectors from the bootloader's linker script.
-         *  
-         *  For more information about how to remap the interrupt vectors,
-         *  please refer to AN1157.  An example is provided below for the T2
-         *  interrupt with a bootloader ending at address 0x1400
-         */
-//        void __attribute__ ((address(0x1404))) ISRTable(){
-//        
-//        	asm("reset"); //reset instruction to prevent runaway code
-//        	asm("goto %0"::"i"(&_T2Interrupt));  //T2Interrupt's address
-//        }
-    #endif
-#elif defined(_PIC14E)
-    	//These are your actual interrupt handling routines.
-	void interrupt ISRCode()
-	{
-		//Check which interrupt flag caused the interrupt.
-		//Service the interrupt
-		//Clear the interrupt flag
-		//Etc.
-        #if defined(USB_INTERRUPT)
-
-	        USBDeviceTasks();
-        #endif
-	}
 #endif
-
-
-
-
 
 /** DECLARATIONS ***************************************************/
 #if defined(__18CXX)
@@ -352,24 +223,9 @@ int main(void)
     {
         #if defined(USB_POLLING)
 		// Check bus status and service USB interrupts.
-        USBDeviceTasks(); // Interrupt or polling method.  If using polling, must call
-        				  // this function periodically.  This function will take care
-        				  // of processing and responding to SETUP transactions 
-        				  // (such as during the enumeration process when you first
-        				  // plug in).  USB hosts require that USB devices should accept
-        				  // and process SETUP packets in a timely fashion.  Therefore,
-        				  // when using polling, this function should be called 
-        				  // regularly (such as once every 1.8ms or faster** [see 
-        				  // inline code comments in usb_device.c for explanation when
-        				  // "or faster" applies])  In most cases, the USBDeviceTasks() 
-        				  // function does not take very long to execute (ex: <100 
-        				  // instruction cycles) before it returns.
+        USBDeviceTasks(); 
         #endif
-    				  
-
-		// Application-specific tasks.
-		// Application related code may be added here, or in the ProcessIO() function.
-		TRISBbits.TRISB7 = 0;// Make RB0 output.
+		// Application specific code is added in ProcessIO()
         ProcessIO();        
     }//end while
 }//end main
@@ -418,188 +274,13 @@ static void InitializeSystem(void)
 
     #if (defined(__18CXX) & !defined(PIC18F87J50_PIM) & !defined(PIC18F97J94_FAMILY))
         ADCON1 |= 0x0F;                 // Default all pins to digital
-    #elif defined(__C30__) || defined __XC16__
-        #if defined(__PIC24FJ256GB110__) || defined(__PIC24FJ256GB106__)
-            AD1PCFGL = 0xFFFF;
-         #elif defined(__dsPIC33EP512MU810__)||defined(__PIC24EP512GU810__)
-        	ANSELA = 0x0000;
-    		ANSELB = 0x0000;
-    		ANSELC = 0x0000;
-    		ANSELD = 0x0000;
-    		ANSELE = 0x0000;
-    		ANSELG = 0x0000;
-            
-            // The dsPIC33EP512MU810 features Peripheral Pin
-            // select. The following statements map UART2 to 
-            // device pins which would connect to the the 
-            // RX232 transciever on the Explorer 16 board.
-
-             RPINR19 = 0;
-             RPINR19 = 0x64;
-             RPOR9bits.RP101R = 0x3;
-
- 
-        #endif
-    #elif defined(__C32__)
-        AD1PCFG = 0xFFFF;
     #endif
-    
-    
-    #if defined(__32MX460F512L__)|| defined(__32MX795F512L__)
-    // Configure the PIC32 core for the best performance
-    // at the operating frequency. The operating frequency is already set to 
-    // 60MHz through Device Config Registers
-    SYSTEMConfigPerformance(60000000);
-	#endif
-
-    #if defined(PIC18F87J50_PIM) || defined(PIC18F46J50_PIM) || defined(PIC18F_STARTER_KIT_1) || defined(PIC18F47J53_PIM)
-	//On the PIC18F87J50 Family of USB microcontrollers, the PLL will not power up and be enabled
-	//by default, even if a PLL enabled oscillator configuration is selected (such as HS+PLL).
-	//This allows the device to power up at a lower initial operating frequency, which can be
-	//advantageous when powered from a source which is not gauranteed to be adequate for 48MHz
-	//operation.  On these devices, user firmware needs to manually set the OSCTUNE<PLLEN> bit to
-	//power up the PLL.
-    {
-        unsigned int pll_startup_counter = 600;
-        OSCTUNEbits.PLLEN = 1;  //Enable the PLL and wait 2+ms until the PLL locks before enabling USB module
-        while(pll_startup_counter--);
-    }
-    //Device switches over automatically to PLL output after PLL is locked and ready.
-    #endif
-
-    #if defined(PIC18F87J50_PIM)
-	//Configure all I/O pins to use digital input buffers.  The PIC18F87J50 Family devices
-	//use the ANCONx registers to control this, which is different from other devices which
-	//use the ADCON1 register for this purpose.
-    WDTCONbits.ADSHR = 1;			// Select alternate SFR location to access ANCONx registers
-    ANCON0 = 0xFF;                  // Default all pins to digital
-    ANCON1 = 0xFF;                  // Default all pins to digital
-    WDTCONbits.ADSHR = 0;			// Select normal SFR locations
-    #endif
-
-    #if defined(PIC18F97J94_FAMILY)
-        //Configure I/O pins for digital input mode.
-        ANCON1 = 0xFF;
-        ANCON2 = 0xFF;
-        ANCON3 = 0xFF;
-        #if(USB_SPEED_OPTION == USB_FULL_SPEED)
-            //Enable INTOSC active clock tuning if full speed
-            ACTCON = 0x90; //Enable active clock self tuning for USB operation
-            while(OSCCON2bits.LOCK == 0);   //Make sure PLL is locked/frequency is compatible
-                                            //with USB operation (ex: if using two speed 
-                                            //startup or otherwise performing clock switching)
-        #endif
-    #endif
-    
-    #if defined(PIC18F45K50_FAMILY)
-        //Configure oscillator settings for clock settings compatible with USB 
-        //operation.  Note: Proper settings depends on USB speed (full or low).
-        #if(USB_SPEED_OPTION == USB_FULL_SPEED)
-            OSCTUNE = 0x80; //3X PLL ratio mode selected
-            OSCCON = 0x70;  //Switch to 16MHz HFINTOSC
-            OSCCON2 = 0x10; //Enable PLL, SOSC, PRI OSC drivers turned off
-            while(OSCCON2bits.PLLRDY != 1);   //Wait for PLL lock
-            *((unsigned char*)0xFB5) = 0x90;  //Enable active clock tuning for USB operation
-        #endif
-    #endif
-
-
-    #if defined(PIC18F46J50_PIM) || defined(PIC18F_STARTER_KIT_1) || defined(PIC18F47J53_PIM)
-	//Configure all I/O pins to use digital input buffers.  The PIC18F87J50 Family devices
-	//use the ANCONx registers to control this, which is different from other devices which
-	//use the ADCON1 register for this purpose.
-    ANCON0 = 0xFF;                  // Default all pins to digital
-    ANCON1 = 0xFF;                  // Default all pins to digital
-    #endif
-    
-    #if defined(__dsPIC33EP512MU810__)||defined(__PIC24EP512GU810__)
-
-    // Configure the device PLL to obtain 60 MIPS operation. The crystal
-    // frequency is 8MHz. Divide 8MHz by 2, multiply by 60 and divide by
-    // 2. This results in Fosc of 120MHz. The CPU clock frequency is
-    // Fcy = Fosc/2 = 60MHz. Wait for the Primary PLL to lock and then
-    // configure the auxilliary PLL to provide 48MHz needed for USB 
-    // Operation.
-
-	PLLFBD = 58;				/* M  = 60	*/
-	CLKDIVbits.PLLPOST = 0;		/* N1 = 2	*/
-	CLKDIVbits.PLLPRE = 0;		/* N2 = 2	*/
-	OSCTUN = 0;			
-
-    /*	Initiate Clock Switch to Primary
-     *	Oscillator with PLL (NOSC= 0x3)*/
 	
-    __builtin_write_OSCCONH(0x03);		
-	__builtin_write_OSCCONL(0x01);
-	
-	while (OSCCONbits.COSC != 0x3); 
-	while (OSCCONbits.COSC != 0x3);       
-
-    // Configuring the auxiliary PLL, since the primary
-    // oscillator provides the source clock to the auxiliary
-    // PLL, the auxiliary oscillator is disabled. Note that
-    // the AUX PLL is enabled. The input 8MHz clock is divided
-    // by 2, multiplied by 24 and then divided by 2. Wait till 
-    // the AUX PLL locks.
-
-    ACLKCON3 = 0x24C1;   
-    ACLKDIV3 = 0x7;
-	
-    ACLKCON3bits.ENAPLL = 1;
-    while(ACLKCON3bits.APLLCK != 1); 
-
-    #endif
-
-   #if defined(PIC24FJ64GB004_PIM) || defined(PIC24FJ256DA210_DEV_BOARD)
-	//On the PIC24FJ64GB004 Family of USB microcontrollers, the PLL will not power up and be enabled
-	//by default, even if a PLL enabled oscillator configuration is selected (such as HS+PLL).
-	//This allows the device to power up at a lower initial operating frequency, which can be
-	//advantageous when powered from a source which is not gauranteed to be adequate for 32MHz
-	//operation.  On these devices, user firmware needs to manually set the CLKDIV<PLLEN> bit to
-	//power up the PLL.
-    {
-        unsigned int pll_startup_counter = 600;
-        CLKDIVbits.PLLEN = 1;
-        while(pll_startup_counter--);
-    }
-
-    //Device switches over automatically to PLL output after PLL is locked and ready.
-    #endif
-
-
-//	The USB specifications require that USB peripheral devices must never source
-//	current onto the Vbus pin.  Additionally, USB peripherals should not source
-//	current on D+ or D- when the host/hub is not actively powering the Vbus line.
-//	When designing a self powered (as opposed to bus powered) USB peripheral
-//	device, the firmware should make sure not to turn on the USB module and D+
-//	or D- pull up resistor unless Vbus is actively powered.  Therefore, the
-//	firmware needs some means to detect when Vbus is being powered by the host.
-//	A 5V tolerant I/O pin can be connected to Vbus (through a resistor), and
-// 	can be used to detect when Vbus is high (host actively powering), or low
-//	(host is shut down or otherwise not supplying power).  The USB firmware
-// 	can then periodically poll this I/O pin to know when it is okay to turn on
-//	the USB module/D+/D- pull up resistor.  When designing a purely bus powered
-//	peripheral device, it is not possible to source current on D+ or D- when the
-//	host is not actively providing power on Vbus. Therefore, implementing this
-//	bus sense feature is optional.  This firmware can be made to use this bus
-//	sense feature by making sure "USE_USB_BUS_SENSE_IO" has been defined in the
-//	HardwareProfile.h file.    
+	// Make sure that the device does not source current to host.
     #if defined(USE_USB_BUS_SENSE_IO)
     tris_usb_bus_sense = INPUT_PIN; // See HardwareProfile.h
     #endif
     
-//	If the host PC sends a GetStatus (device) request, the firmware must respond
-//	and let the host know if the USB peripheral device is currently bus powered
-//	or self powered.  See chapter 9 in the official USB specifications for details
-//	regarding this request.  If the peripheral device is capable of being both
-//	self and bus powered, it should not return a hard coded value for this request.
-//	Instead, firmware should check if it is currently self or bus powered, and
-//	respond accordingly.  If the hardware has been configured like demonstrated
-//	on the PICDEM FS USB Demo Board, an I/O pin can be polled to determine the
-//	currently selected power source.  On the PICDEM FS USB Demo Board, "RA2" 
-//	is used for	this purpose.  If using this feature, make sure "USE_SELF_POWER_SENSE_IO"
-//	has been defined in HardwareProfile - (platform).h, and that an appropriate I/O pin 
-//  has been mapped	to it.
     #if defined(USE_SELF_POWER_SENSE_IO)
     tris_self_power = INPUT_PIN;	// See HardwareProfile.h
     #endif
@@ -607,8 +288,7 @@ static void InitializeSystem(void)
 	USBGenericOutHandle = 0;	
 	USBGenericInHandle = 0;		
 
-    UserInit();			//Application related initialization.  See user.c
-
+    UserInit();			//Application related initialization. 
     USBDeviceInit();	//usb_device.c.  Initializes USB module SFRs and firmware
     					//variables to known states.
 }//end InitializeSystem
@@ -621,7 +301,34 @@ void UserInit(void)
     mInitAllSwitches();
 
 	blinkStatusValid = TRUE;	//Blink the normal USB state on the LEDs.
-
+	// Enable Channel 0 and Channel 1 for ADC
+	
+	// Disable A/D first.
+	ADCON0bits.ADON = 0;
+	// Select channel as per user request. But default to AD0
+	ADCON0 &= (0xF0);
+	ADCON1bits.VCFG1 = 0; // Vss for Vref-
+	ADCON1bits.VCFG0 = 0; // Vdd for Vref+
+	// AN0 and AN1 are analog pins
+	ADCON1bits.PCFG0 = 1;
+	ADCON1bits.PCFG1 = 0;
+	ADCON1bits.PCFG2 = 1;
+	ADCON1bits.PCFG3 = 1;
+	// A/D is little endian
+	ADCON2bits.ADFM = 1;
+	// Set aquisition time of 2 cycles.
+	ADCON2bits.ACQT0 = 1;
+	ADCON2bits.ACQT1 = 0;
+	ADCON2bits.ACQT2 = 0;
+	// Set conversion time of 64 clock cycles
+	ADCON2bits.ADCS0 = 0;
+	ADCON2bits.ADCS1 = 1;
+	ADCON2bits.ADCS2 = 1;
+	
+	// Make RA0 and RA1 as input.
+	TRISAbits.TRISA0 = 1;
+	TRISAbits.TRISA1 = 1;
+	
 }//end UserInit
 
 
@@ -650,33 +357,41 @@ void ProcessIO(void)
         BlinkUSBStatus();
     }
 
-    //User Application USB tasks below.
-    //Note: The user application should not begin attempting to read/write over the USB
-    //until after the device has been fully enumerated.  After the device is fully
-    //enumerated, the USBDeviceState will be set to "CONFIGURED_STATE".
+    // Check if the device is enumerated and is ready to accept commands.
     if((USBDeviceState < CONFIGURED_STATE)||(USBSuspendControl==1)) return;
-    
-    //As the device completes the enumeration process, the USBCBInitEP() function will
-    //get called.  In this function, we initialize the user application endpoints (in this
-    //example code, the user application makes use of endpoint 1 IN and endpoint 1 OUT).
-    //The USBGenRead() function call in the USBCBInitEP() function initializes endpoint 1 OUT
-    //and "arms" it so that it can receive a packet of data from the host.  Once the endpoint
-    //has been armed, the host can then send data to it (assuming some kind of application software
-    //is running on the host, and the application software tries to send data to the USB device).
-    
-    //If the host sends a packet of data to the endpoint 1 OUT buffer, the hardware of the SIE will
-    //automatically receive it and store the data at the memory location pointed to when we called
-    //USBGenRead().  Additionally, the endpoint handle (in this case USBGenericOutHandle) will indicate
-    //that the endpoint is no longer busy.  At this point, it is safe for this firmware to begin reading
-    //from the endpoint buffer, and processing the data.  In this example, we have implemented a few very
-    //simple commands.  For example, if the host sends a packet of data to the endpoint 1 OUT buffer, with the
-    //first byte = 0x80, this is being used as a command to indicate that the firmware should "Toggle LED(s)".
+
     if(!USBHandleBusy(USBGenericOutHandle))		//Check if the endpoint has received any data from the host.
     {   
         switch(OUTPacket[0])					//Data arrived, check what kind of command might be in the packet of data.
         {
-			case 't':
-				LATBbits.LATB7 = ~LATBbits.LATB7;
+			case 'A':
+			if(!USBHandleBusy(USBGenericInHandle))		
+	            {
+					if(OUTPacket[1] == '0')
+					{
+						ADCON0bits.ADON = 0;	// Switch off ADC.
+						ADCON0 &= 0xF0;			// Select channel 0
+						ADCON0bits.ADON = 1;
+						ADCON0bits.GO = 1;
+						// Wait if conversion is happening
+						while(ADCON0bits.DONE);
+						INPacket[0] = ADRESL;
+						INPacket[1] = ADRESH;
+					}
+					else if(OUTPacket[1] == '1')
+					{
+						ADCON0bits.ADON = 0;	// Switch off ADC.
+						ADCON0 &= 0xF0;			// Select channel 
+						ADCON0bits.CHS0 = 1;
+						ADCON0bits.ADON = 1;
+						ADCON0bits.GO = 1;
+						// Wait if conversion is happening
+						while(ADCON0bits.DONE);
+						INPacket[0] = ADRESL;
+						INPacket[1] = ADRESH;
+					}
+					USBGenericInHandle = USBGenWrite(USBGEN_EP_NUM,(BYTE*)&INPacket,USBGEN_EP_SIZE);	
+                }	
 				break;
             case 0x80:  //Toggle LED(s) command from PC application.
 		        blinkStatusValid = FALSE;		//Disable the regular LED blink pattern indicating USB state, PC application is controlling the LEDs.
@@ -692,9 +407,6 @@ void ProcessIO(void)
                 }
                 break;
             case 0x81:  //Get push button state command from PC application.
-				//Now check to make sure no previous attempts to send data to the host are still pending.  If any attemps are still
-				//pending, we do not want to write to the endpoint 1 IN buffer again, until the previous transaction is complete.
-				//Otherwise the unsent data waiting in the buffer will get overwritten and will result in unexpected behavior.    
                 if(!USBHandleBusy(USBGenericInHandle))		
 	            {	
 		            //The endpoint was not "busy", therefore it is safe to write to the buffer and arm the endpoint.					
@@ -707,20 +419,12 @@ void ProcessIO(void)
     				{
     					INPacket[1] = 0x00;
     				}				
-	                //The USBGenWrite() function call "arms" the endpoint (and makes the handle indicate the endpoint is busy).
-	                //Once armed, the data will be automatically sent to the host (in hardware by the SIE) the next time the 
-	                //host polls the endpoint.  Once the data is successfully sent, the handle (in this case USBGenericInHandle) 
-	                //will indicate the the endpoint is no longer busy.
+	                // Arm back the handle.
 					USBGenericInHandle = USBGenWrite(USBGEN_EP_NUM,(BYTE*)&INPacket,USBGEN_EP_SIZE);	
                 }
                 break;
         }
         
-        //Re-arm the OUT endpoint for the next packet:
-	    //The USBGenRead() function call "arms" the endpoint (and makes it "busy").  If the endpoint is armed, the SIE will 
-	    //automatically accept data from the host, if the host tries to send a packet of data to the endpoint.  Once a data 
-	    //packet addressed to this endpoint is received from the host, the endpoint will no longer be busy, and the application
-	    //can read the data which will be sitting in the buffer.
         USBGenericOutHandle = USBGenRead(USBGEN_EP_NUM,(BYTE*)&OUTPacket,USBGEN_EP_SIZE);
     }
 }//end ProcessIO
@@ -822,24 +526,6 @@ void BlinkUSBStatus(void)
 // ******************************************************************************************************
 // ************** USB Callback Functions ****************************************************************
 // ******************************************************************************************************
-// The USB firmware stack will call the callback functions USBCBxxx() in response to certain USB related
-// events.  For example, if the host PC is powering down, it will stop sending out Start of Frame (SOF)
-// packets to your device.  In response to this, all USB devices are supposed to decrease their power
-// consumption from the USB Vbus to <2.5mA each.  The USB module detects this condition (which according
-// to the USB specifications is 3+ms of no bus activity/SOF packets) and then calls the USBCBSuspend()
-// function.  You should modify these callback functions to take appropriate actions for each of these
-// conditions.  For example, in the USBCBSuspend(), you may wish to add code that will decrease power
-// consumption from Vbus to <2.5mA (such as by clock switching, turning off LEDs, putting the
-// microcontroller to sleep, etc.).  Then, in the USBCBWakeFromSuspend() function, you may then wish to
-// add code that undoes the power saving things done in the USBCBSuspend() function.
-
-// The USBCBSendResume() function is special, in that the USB stack will not automatically call this
-// function.  This function is meant to be called from the application firmware instead.  See the
-// additional comments near the function.
-
-// Note *: The "usb_20.pdf" specs indicate 500uA or 2.5mA, depending upon device classification. However,
-// the USB-IF has officially issued an ECN (engineering change notice) changing this to 2.5mA for all 
-// devices.  Make sure to re-download the latest specifications to get all of the newest ECNs.
 
 /******************************************************************************
  * Function:        void USBCBSuspend(void)
@@ -857,23 +543,7 @@ void BlinkUSBStatus(void)
  * Note:            None
  *****************************************************************************/
 void USBCBSuspend(void)
-{
-	//Example power saving code.  Insert appropriate code here for the desired
-	//application behavior.  If the microcontroller will be put to sleep, a
-	//process similar to that shown below may be used:
-	
-	//ConfigureIOPinsForLowPower();
-	//SaveStateOfAllInterruptEnableBits();
-	//DisableAllInterruptEnableBits();
-	//EnableOnlyTheInterruptsWhichWillBeUsedToWakeTheMicro();	//should enable at least USBActivityIF as a wake source
-	//Sleep();
-	//RestoreStateOfAllPreviouslySavedInterruptEnableBits();	//Preferrably, this should be done in the USBCBWakeFromSuspend() function instead.
-	//RestoreIOPinsToNormal();									//Preferrably, this should be done in the USBCBWakeFromSuspend() function instead.
-
-	//IMPORTANT NOTE: Do not clear the USBActivityIF (ACTVIF) bit here.  This bit is 
-	//cleared inside the usb_device.c file.  Clearing USBActivityIF here will cause 
-	//things to not work as intended.	
-	
+{	
 }
 
 /******************************************************************************
@@ -899,14 +569,6 @@ void USBCBSuspend(void)
  *****************************************************************************/
 void USBCBWakeFromSuspend(void)
 {
-	// If clock switching or other power savings measures were taken when
-	// executing the USBCBSuspend() function, now would be a good time to
-	// switch back to normal full power run mode conditions.  The host allows
-	// a few milliseconds of wakeup time, after which the device must be 
-	// fully back to normal, and capable of receiving and processing USB
-	// packets.  In order to do this, the USB module must receive proper
-	// clocking (IE: 48MHz clock must be available to SIE for full speed USB
-	// operation).
 }
 
 /********************************************************************
@@ -929,8 +591,6 @@ void USBCBWakeFromSuspend(void)
  *******************************************************************/
 void USBCB_SOF_Handler(void)
 {
-    // No need to clear UIRbits.SOFIF to 0 here.
-    // Callback caller is already doing that.
 }
 
 /*******************************************************************
@@ -952,24 +612,6 @@ void USBCB_SOF_Handler(void)
  *******************************************************************/
 void USBCBErrorHandler(void)
 {
-    // No need to clear UEIR to 0 here.
-    // Callback caller is already doing that.
-
-	// Typically, user firmware does not need to do anything special
-	// if a USB error occurs.  For example, if the host sends an OUT
-	// packet to your device, but the packet gets corrupted (ex:
-	// because of a bad connection, or the user unplugs the
-	// USB cable during the transmission) this will typically set
-	// one or more USB error interrupt flags.  Nothing specific
-	// needs to be done however, since the SIE will automatically
-	// send a "NAK" packet to the host.  In response to this, the
-	// host will normally retry to send the packet again, and no
-	// data loss occurs.  The system will typically recover
-	// automatically, without the need for application firmware
-	// intervention.
-	
-	// Nevertheless, this callback function is provided, such as
-	// for debugging purposes.
 }
 
 
