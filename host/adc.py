@@ -29,5 +29,5 @@ clf()
 lenmin = min(len(axis1), len(axis2))
 axis1 = axis1[:lenmin]
 axis2 = axis2[:lenmin]
-plot(axis1, axis2)
+plot(axis1, axis2, 'b')
 show()
